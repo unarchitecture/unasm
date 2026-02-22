@@ -1,6 +1,6 @@
 // unisa assembler
 // two-pass: first pass finds labels, second pass emits bytes.
-// supports comments with ;, labels with :, and directives (.org, .db)
+// supports comments with ;, labels with :, and directives (.org, .db, .dw)
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -163,6 +163,7 @@ static void emit_reg_only(int op, int rd) {
 
 // --- directive helpers ---
 // .db supports: numbers (.db 0x48, 0x65), strings (.db "Hi"), or both (.db "Hi", 10)
+// .dw emits a 16-bit value little-endian — works with labels (.dw my_handler)
 // .org just sets the output position
 
 // walk a .db argument list, either counting bytes or emitting them.
@@ -230,6 +231,13 @@ static void assemble_line(char *line) {
         }
         if (strcmp(dir, ".DB") == 0) {
             process_db(rest, 1);
+            return;
+        }
+        if (strcmp(dir, ".DW") == 0) {
+            trim(rest);
+            int val = parse_value(rest);
+            emit(val & 0xFF);
+            emit((val >> 8) & 0xFF);
             return;
         }
         fprintf(stderr, "unknown directive: %s\n", dir);
@@ -340,6 +348,8 @@ int main(int argc, char **argv) {
                 addr = parse_number(rest);
             } else if (strcmp(dir, ".DB") == 0) {
                 addr += process_db(rest, 0);
+            } else if (strcmp(dir, ".DW") == 0) {
+                addr += 2;
             }
             continue;
         }
