@@ -6,7 +6,38 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "cpu/control_unit.h"
+
+// opcodes — must match unisa cpu/control_unit.h
+#define OP_NOP  0x00
+#define OP_HLT  0x01
+#define OP_RET  0x02
+#define OP_PUSH 0x03
+#define OP_POP  0x04
+#define OP_CLI  0x05
+#define OP_STI  0x06
+#define OP_RTI  0x07
+#define OP_LDI  0x10
+#define OP_LD   0x11
+#define OP_ST   0x12
+#define OP_MOV  0x13
+#define OP_LDR  0x14
+#define OP_STR  0x15
+#define OP_ADD  0x20
+#define OP_SUB  0x21
+#define OP_AND  0x22
+#define OP_OR   0x23
+#define OP_XOR  0x24
+#define OP_NOT  0x25
+#define OP_SHL  0x26
+#define OP_SHR  0x27
+#define OP_CMP  0x28
+#define OP_ADDI 0x29
+#define OP_JMP  0x30
+#define OP_JZ   0x31
+#define OP_JNZ  0x32
+#define OP_JC   0x33
+#define OP_JNC  0x34
+#define OP_CALL 0x40
 
 #define MAX_LINES  4096
 #define MAX_LINE   256
